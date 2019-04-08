@@ -212,7 +212,8 @@ function findFirstSingleChar(str) {
  *
  */
 function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
-    throw new Error('Not implemented');
+    return (isStartIncluded ? '[' : '(').concat(a > b ? b : a).concat(', ').concat(a > b ? a : b).concat(isEndIncluded ? ']' : ')');
+
 }
 
 
@@ -229,7 +230,7 @@ function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
  * 'noon' => 'noon'
  */
 function reverseString(str) {
-    throw new Error('Not implemented');
+    return str.split('').reverse().join('');
 }
 
 
@@ -246,7 +247,7 @@ function reverseString(str) {
  *   34143 => 34143
  */
 function reverseInteger(num) {
-    throw new Error('Not implemented');
+    return parseInt(reverseString(num.toString()));
 }
 
 
@@ -271,7 +272,20 @@ function reverseInteger(num) {
  *   4916123456789012 => false
  */
 function isCreditCardNumber(ccn) {
-    throw new Error('Not implemented');
+    var number = ccn.toString();
+    var sum = 0;
+    var flag = false;
+
+    for (var i = number.length - 1; i >= 0; i--) {
+        var dig = parseInt(number[i]);
+        if (flag)
+            if ((dig *= 2) > 9)
+                dig -= 9;
+        sum += dig;
+        flag = !flag;
+    }
+
+    return !(sum % 10)
 }
 
 
@@ -290,7 +304,10 @@ function isCreditCardNumber(ccn) {
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
 function getDigitalRoot(num) {
-    throw new Error('Not implemented');
+      do {
+        num = (function(num){ return num.toString().split('').map(Number).reduce((acc, elem) => acc + elem);})(num);
+    } while (num > 9);
+    return num;
 }
 
 
@@ -316,7 +333,18 @@ function getDigitalRoot(num) {
  *   '{[(<{[]}>)]}' = true 
  */
 function isBracketsBalanced(str) {
-    throw new Error('Not implemented');
+    var stack = [];
+    var map = new Map([ ['[', ']'], ['(', ')'], ['{', '}'], ['<', '>'] ]);
+    for(var c of str){
+        if(map.has(c)){
+            stack.push(c);  
+        } else {
+            var temp = stack.pop();
+            if (temp === undefined || map.get(temp) !== c)
+                return false;
+        }
+    }
+    return stack.pop() === undefined;
 }
 
 
@@ -376,7 +404,7 @@ function timespanToHumanString(startDate, endDate) {
  *    365, 10 => '365'
  */
 function toNaryString(num, n) {
-    throw new Error('Not implemented');
+    return num.toString(n);
 }
 
 
@@ -393,7 +421,18 @@ function toNaryString(num, n) {
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
 function getCommonDirectoryPath(pathes) {
-    throw new Error('Not implemented');
+       pathes.sort();
+    var i = 0;
+    var slash = -1;
+    for(; i < pathes[0].length; i++){
+        if(pathes[0][i] != pathes[pathes.length - 1][i]){
+            break;
+        }
+        if(pathes[0][i] == '/')
+            slash = i;
+    }
+    return slash == -1 ? '' : pathes[0].slice(0, slash + 1);
+
 }
 
 
